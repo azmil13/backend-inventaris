@@ -12,7 +12,7 @@ module.exports = {
     getDataBarang(req, res) {
         pool.getConnection(function (err, connection) {
             if (err) throw err;
-            const query = 'SELECT * FROM ruangan';
+            const query = 'SELECT * FROM barang';
             connection.query(query, function (err, result) {
                 if (err) throw err;
 
