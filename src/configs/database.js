@@ -13,5 +13,5 @@ module.exports = {
     user: 'root',
     password: 'OnFfY1myEiT6OZBGCh3p',
     database: 'railway',
-    port: 6069,
+    port: 6019,
 }
