@@ -1,116 +1,131 @@
 const config = require('../configs/database');
-const mysql = require('mysql');
-const connection = mysql.createConnection(config);
-connection.connect();
+const mysql = require('mysql2');
+const pool = mysql.createPool(config);
 
-const getDataRuangan = async (req,res) => {
-    const data = await new Promise((resolve,reject) => {
-        connection.query('SELECT * FROM ruangan', function(error,rows){
-            if(rows) {
-                resolve(rows)
-            } else{
-                reject([]);
-            }
-        });
-    });
-    if (data) {
-        res.send({
-            success: true,
-            message: 'Berhasil ambil data',
-            data: data
-        });
-    } else {
-        res.send({
-            success: false,
-            message: 'Gagal ambil data!',
-        });
-    }
-}
-//menambah data
-const addDataRuangan = async(req,res) => {
-    let data = {
-        id_ruangan : req.body.id_ruangan,
-        nama_ruangan : req.body.nama_ruangan,
-        lantai_id : req.body.lantai_id
-    }
-    const result = await new Promise((resolve,reject) => {
-        connection.query('INSERT INTO ruangan SET ?;',[data],function(error,rows){
-            if (rows) {
-                resolve(true)
-            }else{
-                reject(false)
-            }
-        });
-    });
-    if(result){
-        res.send({
-            success : true,
-            message : 'Berhasil menambah data!'
-        });
-    } else {
-        res.send({
-            success: false,
-            message: 'Gagal menambah data'
-        });
-    }
-}
-//mengubah data
-const editDataRuangan = async(req,res) => {
-    let id_ruangan = req.params.id_Ruangan;
 
-    let dataEdit= {
-        id_ruangan : req.body.id_ruangan,
-        nama_ruangan : req.body.nama_ruangan,
-        lantai_id : req.body.lantai_id
-    }
-    const result = await new Promise((resolve,reject) => {
-        connection.query('UPDATE ruangan SET ? WHERE id_ruangan = ?;', [dataEdit,id_ruangan],function(error,rows){
-            if(rows) {
-                resolve(true);
-            } else {
-                reject(false);
-            }
-        });
-    });
-    if(result){
-        res.send({
-            success: true,
-            message: 'Berhasil edit data'
-        });
-    } else{
-        res.send({
-            success: false,
-            message: 'Gagal edit data'
-        });
-    }
-}
-//menghapus data
-const deleteDataRuangan = async(req,res) => {
-    let id_ruangan = req.params.id_Ruangan;
-    const result = await new Promise((resolve,reject) => {
-        connection.query('DELETE FROM ruangan WHERE id_ruangan = ?;',[id_ruangan],function(error,rows){
-            if(rows){
-                resolve(true)
-            } else{
-                reject(false)
-            }
-        });
-    });
-    if(result){
-        res.send({
-            success: true,
-            message: 'Berhasil Hapus Data'
-        });
-    } else {
-        res.send({
-            success: false,
-            message: 'Gagal Hapus Data'
-        });
-    }
-}
+pool.on('error', (err) => {
+    console.log(err)
+});
+
 module.exports = {
-    getDataRuangan,
-    addDataRuangan,
-    editDataRuangan,
-    deleteDataRuangan
+    
+    getDataRuangan(req, res) {
+        pool.getConnection(function (err, connection) {
+            if (err) throw err;
+            const query = 'SELECT * FROM ruangan';
+            connection.query(query, function (err, result) {
+                if (err) throw err;
+
+                res.send({
+                    success: true,
+                    message: 'Fetch data successfully',
+                    data: result
+                })
+            })
+
+            connection.release();
+        })
+    },
+
+    getDetailRuangan(req, res) {
+        const id = req.params.id;
+        pool.getConnection(function (err, connection) {
+            if (err) throw err;
+            const query = 'SELECT * FROM ruangan WHERE id = ? ';
+            connection.query(query ,[id], function (err, result) {
+                if (err) throw err;
+
+                res.send({
+                    success: true,
+                    message: 'Fetch data successfully',
+                    data: result
+                })
+            })
+
+            connection.release();
+        })
+    },
+
+    addDataRuangan(req, res) {
+        // parse data
+        const {
+            id_ruangan,
+            nama_ruangan,
+            lantai_id,
+        } = req.body
+
+        pool.getConnection(function (err, connection) {
+            if (err) console.log(err);
+
+            const query = 'INSERT INTO ruangan (id_ruangan, nama_ruangan, lantai_id) VALUES (?, ?, ?, ?, ?)';
+            connection.query(query, [
+                id_ruangan,
+                nama_ruangan,
+                lantai_id,
+                cover], function (err, result) {
+                    if (err) console.log(err);
+
+                    res.send({
+                        success: true,
+                        message: 'Your record has been saved successfully',
+                    })
+                })
+
+            connection.release();
+        })
+    },
+
+    editDataRuangan(req, res) {
+        const id_ruangan = req.params.id_ruangan;
+
+        // parse data
+        const data = {
+            id_ruangan: req.body.id_ruangan,
+            nama_ruangan: req.body.nama_ruangan,
+            lantai_id: req.body.lantai_id,
+        }
+
+        pool.getConnection(function (err, connection) {
+            if (err) throw err;
+
+            const query = 'UPDATE ruangan SET ? WHERE id = ? ';
+            connection.query(query, [data, id_ruangan], function (err, result) {
+                if (err) throw err;
+
+                if (result['affectedRows'] === 0) res.send({
+                    message: 'There is no record with that id'
+                })
+
+                res.send({
+                    success: true,
+                    message: 'Updated successfully',
+                })
+            })
+
+            connection.release();
+        })
+    },
+
+    deleteDataRuangan(req, res) {
+        const id_ruangan = req.params.id_ruangan;
+
+        pool.getConnection(function (err, connection) {
+            if (err) throw err;
+
+            const query = 'DELETE FROM ruangan WHERE id = ?';
+            connection.query(query, [id_ruangan], function (err, result) {
+                if (err) throw err;
+
+                if (result['affectedRows'] === 0) res.send({
+                    message: 'There is no record with that id'
+                })
+
+                res.send({
+                    success: true,
+                    message: 'Deleted successfully',
+                })
+            })
+            connection.release();
+        })
+    }
 }
