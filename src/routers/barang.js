@@ -6,7 +6,7 @@ router.get('/', barang.getDataBarang);
 
 
 // //Get localhost:8080/produk/2 => Ambil data semua produk berdasarkan id = 2
-// router.get('/:id', produk.getDetailProduk);
+router.get('/:id_barang', barang.getDetailBarang);
 
 // POST lcalhost:8080/produk/add => Tambah data produk ke database
 router.post('/add', barang.addDataBarang);

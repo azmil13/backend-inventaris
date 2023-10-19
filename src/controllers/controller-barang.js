@@ -1,134 +1,159 @@
 const config = require('../configs/database');
-const mysql = require('mysql');
-const connection = mysql.createConnection(config);
-connection.connect();
+const mysql = require('mysql2');
+const pool = mysql.createPool(config);
 
-const getDataBarang = async (req,res) => {
-    const data = await new Promise((resolve,reject) => {
-        connection.query('SELECT * FROM barang', function(error,rows){
-            if(rows) {
-                resolve(rows)
-            } else{
-                reject([]);
-            }
-        });
-    });
-    if (data) {
-        res.send({
-            success: true,
-            message: 'Berhasil ambil data',
-            data: data
-        });
-    } else {
-        res.send({
-            success: false,
-            message: 'Gagal ambil data!',
-        });
-    }
-}
-//menambah data
-const addDataBarang = async(req,res) => {
-    let data = {
-        no : req.body.no,
-        nama_barang : req.body.nama_barang,
-        merek : req.body.merek,
-        tipe : req.body.tipe,
-        model : req.body.model,
-        ruangan_id : req.body.ruangan_id,
-        jumlah : req.body.jumlah,
-        tahun_peroleh : req.body.tahun_peroleh,
-        nilai_peroleh : req.body.nilai_peroleh,
-        nilai_perbaikan : req.body.nilai_perbaikan,
-        no_inventaris : req.body.no_inventaris,
-        kondisi : req.body.kondisi,
-    }
-    const result = await new Promise((resolve,reject) => {
-        connection.query('INSERT INTO barang SET ?;',[data],function(error,rows){
-            if (rows) {
-                resolve(true)
-            }else{
-                reject(false)
-            }
-        });
-    });
-    if(result){
-        res.send({
-            success : true,
-            message : 'Berhasil menambah data!'
-        });
-    } else {
-        res.send({
-            success: false,
-            message: 'Gagal menambah data'
-        });
-    }
-}
-//mengubah data
-const editDataBarang = async(req,res) => {
-    let id_barang = req.params.id_barang;
 
-    let dataEdit= {
-        no : req.body.no,
-        nama_barang : req.body.nama_barang,
-        merek : req.body.merek,
-        tipe : req.body.tipe,
-        model : req.body.model,
-        ruangan_id : req.body.ruangan_id,
-        jumlah : req.body.jumlah,
-        tahun_peroleh : req.body.tahun_peroleh,
-        nilai_peroleh : req.body.nilai_peroleh,
-        nilai_perbaikan : req.body.nilai_perbaikan,
-        no_inventaris : req.body.no_inventaris,
-        kondisi : req.body.kondisi,
-    }
-    const result = await new Promise((resolve,reject) => {
-        connection.query('UPDATE barang SET ? WHERE id_barang = ?;', [dataEdit,id_barang],function(error,rows){
-            if(rows) {
-                resolve(true);
-            } else {
-                reject(false);
-            }
-        });
-    });
-    if(result){
-        res.send({
-            success: true,
-            message: 'Berhasil edit data'
-        });
-    } else{
-        res.send({
-            success: false,
-            message: 'Gagal edit data'
-        });
-    }
-}
-//menghapus data
-const deleteDataBarang = async(req,res) => {
-    let id_barang = req.params.id_barang;
-    const result = await new Promise((resolve,reject) => {
-        connection.query('DELETE FROM barang WHERE id_barang = ?;',[id_barang],function(error,rows){
-            if(rows){
-                resolve(true)
-            } else{
-                reject(false)
-            }
-        });
-    });
-    if(result){
-        res.send({
-            success: true,
-            message: 'Berhasil Hapus Data'
-        });
-    } else {
-        res.send({
-            success: false,
-            message: 'Gagal Hapus Data'
-        });
-    }
-}
+pool.on('error', (err) => {
+    console.log(err)
+});
+
 module.exports = {
-    getDataBarang,
-    addDataBarang,
-    editDataBarang,
-    deleteDataBarang
+    
+    getDataBarang(req, res) {
+        pool.getConnection(function (err, connection) {
+            if (err) throw err;
+            const query = 'SELECT * FROM ruangan';
+            connection.query(query, function (err, result) {
+                if (err) throw err;
+
+                res.send({
+                    success: true,
+                    message: 'Fetch data successfully',
+                    data: result
+                })
+            })
+
+            connection.release();
+        })
+    },
+
+    getDetailBarang(req, res) {
+        const id_barang = req.params.id_barang;
+        pool.getConnection(function (err, connection) {
+            if (err) throw err;
+            const query = 'SELECT * FROM barang WHERE id_barang = ? ';
+            connection.query(query ,[id_barang], function (err, result) {
+                if (err) throw err;
+
+                res.send({
+                    success: true,
+                    message: 'Fetch data successfully',
+                    data: result
+                })
+            })
+
+            connection.release();
+        })
+    },
+
+    addDataBarang(req, res) {
+        // parse data
+        const {
+            no,
+            nama_barang,
+            merek,
+            tipe,
+            model,
+            ruangan_id,
+            jumlah,
+            tahun_peroleh,
+            nilai_peroleh,
+            nilai_perbaikan,
+            no_inventaris,
+            kondisi
+        } = req.body
+
+        pool.getConnection(function (err, connection) {
+            if (err) console.log(err);
+
+            const query = 'INSERT INTO barang ( no,nama_barang,merek,tipe,model,ruangan_id,jumlah,tahun_peroleh,nilai_peroleh,nilai_perbaikan,no_inventaris,kondisi) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+            connection.query(query, [
+                no,
+                nama_barang,
+                merek,
+                tipe,
+                model,
+                ruangan_id,
+                jumlah,
+                tahun_peroleh,
+                nilai_peroleh,
+                nilai_perbaikan,
+                no_inventaris,
+                kondisi,
+                cover], function (err, result) {
+                    if (err) console.log(err);
+
+                    res.send({
+                        success: true,
+                        message: 'Your record has been saved successfully',
+                    })
+                })
+
+            connection.release();
+        })
+    },
+
+    editDataBarang(req, res) {
+        const id_barang = req.params.id_barang;
+
+        // parse data
+        const data = {
+            no,
+            nama_barang,
+            merek,
+            tipe,
+            model,
+            ruangan_id,
+            jumlah,
+            tahun_peroleh,
+            nilai_peroleh,
+            nilai_perbaikan,
+            no_inventaris,
+            kondisingan,
+            lantai_id: req.body.lantai_id,
+        }
+
+        pool.getConnection(function (err, connection) {
+            if (err) throw err;
+
+            const query = 'UPDATE barang SET ? WHERE id_barang = ? ';
+            connection.query(query, [data, id_barang], function (err, result) {
+                if (err) throw err;
+
+                if (result['affectedRows'] === 0) res.send({
+                    message: 'There is no record with that id'
+                })
+
+                res.send({
+                    success: true,
+                    message: 'Updated successfully',
+                })
+            })
+
+            connection.release();
+        })
+    },
+
+    deleteDataBarang(req, res) {
+        const id_barang = req.params.id_barang;
+
+        pool.getConnection(function (err, connection) {
+            if (err) throw err;
+
+            const query = 'DELETE FROM barang WHERE id_barang = ?';
+            connection.query(query, [id_barang], function (err, result) {
+                if (err) throw err;
+
+                if (result['affectedRows'] === 0) res.send({
+                    message: 'There is no record with that id'
+                })
+
+                res.send({
+                    success: true,
+                    message: 'Deleted successfully',
+                })
+            })
+            connection.release();
+        })
+    }
 }

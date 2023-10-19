@@ -28,11 +28,11 @@ module.exports = {
     },
 
     getDetailRuangan(req, res) {
-        const id = req.params.id;
+        const id_ruangan = req.params.id_ruangan;
         pool.getConnection(function (err, connection) {
             if (err) throw err;
-            const query = 'SELECT * FROM ruangan WHERE id = ? ';
-            connection.query(query ,[id], function (err, result) {
+            const query = 'SELECT * FROM ruangan WHERE id_ruangan = ? ';
+            connection.query(query ,[id_ruangan], function (err, result) {
                 if (err) throw err;
 
                 res.send({
@@ -57,7 +57,7 @@ module.exports = {
         pool.getConnection(function (err, connection) {
             if (err) console.log(err);
 
-            const query = 'INSERT INTO ruangan (id_ruangan, nama_ruangan, lantai_id) VALUES (?, ?, ?, ?, ?)';
+            const query = 'INSERT INTO ruangan (id_ruangan, nama_ruangan, lantai_id) VALUES (?, ?, ?,)';
             connection.query(query, [
                 id_ruangan,
                 nama_ruangan,
@@ -88,7 +88,7 @@ module.exports = {
         pool.getConnection(function (err, connection) {
             if (err) throw err;
 
-            const query = 'UPDATE ruangan SET ? WHERE id = ? ';
+            const query = 'UPDATE ruangan SET ? WHERE id_ruangan = ? ';
             connection.query(query, [data, id_ruangan], function (err, result) {
                 if (err) throw err;
 
@@ -112,7 +112,7 @@ module.exports = {
         pool.getConnection(function (err, connection) {
             if (err) throw err;
 
-            const query = 'DELETE FROM ruangan WHERE id = ?';
+            const query = 'DELETE FROM ruangan WHERE id_ruangan = ?';
             connection.query(query, [id_ruangan], function (err, result) {
                 if (err) throw err;
 
