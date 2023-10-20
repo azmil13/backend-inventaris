@@ -109,8 +109,7 @@ module.exports = {
             nilai_peroleh,
             nilai_perbaikan,
             no_inventaris,
-            kondisingan,
-            lantai_id: req.body.lantai_id,
+            kondisi,
         }
 
         pool.getConnection(function (err, connection) {
