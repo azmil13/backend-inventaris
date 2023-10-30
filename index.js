@@ -12,7 +12,6 @@ app.use(bodyParser.json())
 app.get('https://inventaris-stfi.vercel.app/barang/ruangan_id', (req, res) => {
   const ruangan_id = req.params.ruangan_id; // Ambil ID dari parameter URL
 
-
   const data = {
       no: no,
       nama_barang: nama_barang,
@@ -31,7 +30,7 @@ app.get('https://inventaris-stfi.vercel.app/barang/ruangan_id', (req, res) => {
   res.json(data);
 });
 
-app.get('/ambil_data', (req, res) => {
+app.get('/barang', (req, res) => {
   // Di sini Anda dapat melakukan pengambilan data dari database atau sumber data lainnya
   const data = {
     no: no,
