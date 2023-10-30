@@ -98,18 +98,18 @@ module.exports = {
 
         // parse data
         const data = {
-            no,
-            nama_barang,
-            merek,
-            tipe,
-            model,
-            ruangan_id,
-            jumlah,
-            tahun_peroleh,
-            nilai_peroleh,
-            nilai_perbaikan,
-            no_inventaris,
-            kondisi,
+            no: req.body.no,
+            nama_barang: req.body.nama_barang,
+            merek: req.body.merek,
+            tipe: req.body.tipe,
+            model: req.body.model,
+            ruangan_id: req.body.ruangan_id,
+            jumlah: req.body.jumlah,
+            tahun_peroleh: req.body.tahun_peroleh,
+            nilai_peroleh: req.body.nilai_peroleh,
+            nilai_perbaikan: req.body.nilai_perbaikan,
+            no_inventaris: req.body.no_inventaris,
+            kondisi: req.body.kondisi,
         }
 
         pool.getConnection(function (err, connection) {
