@@ -30,25 +30,25 @@ app.get('/barang/:ruangan_id', (req, res) => {
   res.json(data);
 });
 
-app.get('/barang', (req, res) => {
-  // Di sini Anda dapat melakukan pengambilan data dari database atau sumber data lainnya
-  const data = {
-    no: no,
-    nama_barang: nama_barang,
-    merek: merek,
-    tipe: tipe,
-    model: model,
-    ruangan_id: ruangan_id,
-    jumlah: jumlah,
-    tahun_peroleh: tahun_peroleh,
-    nilai_peroleh: nilai_peroleh,
-    nilai_perbaikan: nilai_perbaikan,
-    no_inventaris: no_inventaris,
-    kondisi: kondisi,
-  };
+// app.get('/barang', (req, res) => {
+//   // Di sini Anda dapat melakukan pengambilan data dari database atau sumber data lainnya
+//   const data = {
+//     no: no,
+//     nama_barang: nama_barang,
+//     merek: merek,
+//     tipe: tipe,
+//     model: model,
+//     ruangan_id: ruangan_id,
+//     jumlah: jumlah,
+//     tahun_peroleh: tahun_peroleh,
+//     nilai_peroleh: nilai_peroleh,
+//     nilai_perbaikan: nilai_perbaikan,
+//     no_inventaris: no_inventaris,
+//     kondisi: kondisi,
+//   };
 
-  res.json(data);
-});
+//   res.json(data);
+// });
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*'); // Ini mengizinkan akses dari semua origin. Gantilah sesuai kebutuhan Anda.
