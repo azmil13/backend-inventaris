@@ -45,7 +45,7 @@ app.get('/barang/:ruangan_id', (req, res) => {
 //     nilai_perbaikan: nilai_perbaikan,
 //     no_inventaris: no_inventaris,
 //     kondisi: kondisi,
-//   };
+//   }; 
 
 //   res.json(data);
 // });
