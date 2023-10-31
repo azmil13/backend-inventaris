@@ -28,11 +28,11 @@ module.exports = {
     },
 
     getDetailBarang(req, res) {
-        const ruangan_id = req.params.ruangan_id;
+        const id_barang = req.params.id_barang;
         pool.getConnection(function (err, connection) {
             if (err) throw err;
-            const query = 'SELECT * FROM barang WHERE ruangan_id = ? ';
-            connection.query(query ,[ruangan_id], function (err, result) {
+            const query = 'SELECT * FROM barang WHERE id_barang = ? ';
+            connection.query(query ,[id_barang], function (err, result) {
                 if (err) throw err;
 
                 res.send({
