@@ -9,26 +9,26 @@ require('dotenv').config();
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 
-app.get('/barang/:ruangan_id', (req, res) => {
-  const ruangan_id = req.params.ruangan_id; // Ambil ID dari parameter URL
+// app.get('/barang/:ruangan_id', (req, res) => {
+//   const ruangan_id = req.params.ruangan_id; // Ambil ID dari parameter URL
 
-  const data = {
-    no,
-    nama_barang,
-    merek,
-    tipe,
-    model, 
-    ruangan_id,
-    jumlah,
-    tahun_peroleh,
-    nilai_peroleh,
-    nilai_perbaikan,
-    no_inventaris,
-    kondisi,
-  };
+//   const data = {
+//     no,
+//     nama_barang,
+//     merek,
+//     tipe,
+//     model, 
+//     ruangan_id,
+//     jumlah,
+//     tahun_peroleh,
+//     nilai_peroleh,
+//     nilai_perbaikan,
+//     no_inventaris,
+//     kondisi,
+//   };
 
-  res.json(data);
-});
+//   res.json(data);
+// });
 
 // app.get('/barang', (req, res) => {
 //   // Di sini Anda dapat melakukan pengambilan data dari database atau sumber data lainnya
