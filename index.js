@@ -56,6 +56,14 @@ app.get('/barang', (req, res) => {
   FROM barang
   INNER JOIN ruangan ON barang.ruangan_id = ruangan.ID_ruangan;
   `;
+
+  connection.query(sql, (error, results, fields) => {
+    if (error) {
+      res.status(500).json({ error: 'Gagal mengambil data' });
+    } else {
+      res.json(results);
+    }
+  });
 });
 
 app.use((req, res, next) => {
