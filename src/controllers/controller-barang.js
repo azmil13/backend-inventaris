@@ -7,8 +7,7 @@ pool.on('error', (err) => {
     console.log(err)
 });
 
-module.exports = {
-    
+module.exports = { 
     getDataBarang(req, res) {
         pool.getConnection(function (err, connection) {
             if (err) throw err;
@@ -16,7 +15,7 @@ module.exports = {
             connection.query(query, function (err, result) {
                 if (err) throw err;
 
-                res.send({
+                res.send({ 
                     success: true,
                     message: 'Fetch data successfully',
                     data: result

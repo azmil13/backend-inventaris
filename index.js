@@ -50,21 +50,7 @@ app.use(bodyParser.json())
 //   res.json(data);
 // });
 
-app.get('/barang', (req, res) => {
-  const sql = `
-  SELECT barang.no, barang.nama_barang, barang.Merek, barang.Tipe, barang.Model, barang.Jumlah, barang.Tahun_peroleh, barang.Nilai_peroleh, barang.Nilai_perbaikan, barang.No_inventaris, barang.Kondisi, ruangan.nama_ruangan
-  FROM barang
-  INNER JOIN ruangan ON barang.ruangan_id = ruangan.ID_ruangan;
-  `;
 
-  connection.query(sql, (error, results, fields) => {
-    if (error) {
-      res.status(500).json({ error: 'Gagal mengambil data' });
-    } else {
-      res.json(results);
-    }
-  });
-});
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*'); // Ini mengizinkan akses dari semua origin. Gantilah sesuai kebutuhan Anda.
