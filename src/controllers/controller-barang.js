@@ -11,7 +11,7 @@ module.exports = {
     getDataBarang(req, res) {
         pool.getConnection(function (err, connection) {
             if (err) throw err;
-            const query = 'SELECT * FROM barang';
+            const query = ' SELECT barang.no, barang.nama_barang, barang.Merek, barang.Tipe, barang.Model, barang.Jumlah, barang.Tahun_peroleh, barang.Nilai_peroleh, barang.Nilai_perbaikan, barang.No_inventaris, barang.Kondisi, ruangan.nama_ruangan FROM barang INNER JOIN ruangan ON barang.ruangan_id = ruangan.ID_ruangan;';
             connection.query(query, function (err, result) {
                 if (err) throw err;
 
