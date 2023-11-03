@@ -9,6 +9,7 @@ require('dotenv').config();
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 
+
 // app.get('/barang', (req, res) => {
 //   const { filterParameter } = req.query; // Ambil parameter filter dari query string
 
