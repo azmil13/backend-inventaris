@@ -16,7 +16,7 @@ app.get('/barang', (req, res) => {
   
   if (filterParameter) {
     // Jika filterParameter diberikan, tambahkan klausa WHERE untuk filter
-    sql += ` WHERE ID_ruangan = ${db.escape(filterParameter)}`;
+    sql += ` WHERE Ruangan_ID = ${db.escape(filterParameter)}`;
   }
 
   db.query(sql, (err, results) => {
