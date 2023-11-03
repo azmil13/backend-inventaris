@@ -9,46 +9,25 @@ require('dotenv').config();
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 
-// app.get('/barang/:ruangan_id', (req, res) => {
-//   const ruangan_id = req.params.ruangan_id; // Ambil ID dari parameter URL
+app.get('/barang', (req, res) => {
+  const { filterParameter } = req.query; // Ambil parameter filter dari query string
 
-//   const data = {
-//     no,
-//     nama_barang,
-//     merek,
-//     tipe,
-//     model, 
-//     ruangan_id,
-//     jumlah,
-//     tahun_peroleh,
-//     nilai_peroleh,
-//     nilai_perbaikan,
-//     no_inventaris,
-//     kondisi,
-//   };
+  let sql = 'SELECT barang.no, barang.nama_barang, barang.Merek, barang.Tipe, barang.Model, barang.Jumlah, barang.Tahun_peroleh, barang.Nilai_peroleh, barang.Nilai_perbaikan, barang.No_inventaris, barang.Kondisi, ruangan.nama_ruangan FROM barang INNER JOIN ruangan ON barang.ruangan_id = ruangan.ID_ruangan;';
+  
+  if (filterParameter) {
+    // Jika filterParameter diberikan, tambahkan klausa WHERE untuk filter
+    sql += ` WHERE ID_ruangan = ${db.escape(filterParameter)}`;
+  }
 
-//   res.json(data);
-// });
-
-// app.get('/barang', (req, res) => {
-//   // Di sini Anda dapat melakukan pengambilan data dari database atau sumber data lainnya
-//   const data = {
-//     no: no,
-//     nama_barang: nama_barang,
-//     merek: merek,
-//     tipe: tipe,
-//     model: model,
-//     ruangan_id: ruangan_id,
-//     jumlah: jumlah,
-//     tahun_peroleh: tahun_peroleh,
-//     nilai_peroleh: nilai_peroleh,
-//     nilai_perbaikan: nilai_perbaikan,
-//     no_inventaris: no_inventaris,
-//     kondisi: kondisi,
-//   }; 
-
-//   res.json(data);
-// });
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error('Terjadi kesalahan saat mengambil data:', err);
+      res.status(500).send('Terjadi kesalahan');
+    } else {
+      res.json(results); // Kirim data yang telah difilter sebagai respons JSON
+    }
+  });
+});
 
 
 app.use((req, res, next) => {
