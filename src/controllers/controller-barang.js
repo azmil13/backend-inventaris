@@ -153,5 +153,26 @@ module.exports = {
             })
             connection.release();
         })
-    }
+    },
+
+    getDataBarangByRuangan(req, res) {
+        const ruangan_id = req.params.ruangan_id;
+        pool.getConnection(function (err, connection) {
+            if (err) throw err;
+            const query = 'SELECT * FROM barang WHERE ruangan_id = ?';
+            connection.query(query, [ruangan_id], function (err, result) {
+                if (err) throw err;
+
+                res.send({
+                    success: true,
+                    message: 'Fetch data by ruangan_id successfully',
+                    data: result
+                });
+            });
+
+            connection.release();
+        });
+    },
+
+    
 }

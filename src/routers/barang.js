@@ -17,4 +17,6 @@ router.put('/edit/:id_barang', barang.editDataBarang);
 // // POST lcalhost:8080/produk/delete => Delete data produk
 router.delete('/delete/:id_barang', barang.deleteDataBarang);
 
+router.get('/ruangan/:ruangan_id', barang.getDataBarangByRuangan);
+
 module.exports = router;
