@@ -45,8 +45,57 @@ module.exports = {
         })
     },
 
+
+    //----------
+    // addDataBarang(req, res) {
+    //     // parse data
+    //     const {
+    //         no,
+    //         nama_barang,
+    //         merek,
+    //         tipe,
+    //         model,
+    //         ruangan_id,
+    //         jumlah,
+    //         tahun_peroleh,
+    //         nilai_peroleh,
+    //         nilai_perbaikan,
+    //         no_inventaris,
+    //         kondisi
+    //     } = req.body
+
+    //     pool.getConnection(function (err, connection) {
+    //         if (err) console.log(err);
+
+    //         const query = 'INSERT INTO barang ( no,nama_barang,merek,tipe,model,ruangan_id,jumlah,tahun_peroleh,nilai_peroleh,nilai_perbaikan,no_inventaris,kondisi) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    //         connection.query(query, [
+    //             no,
+    //             nama_barang,
+    //             merek,
+    //             tipe,
+    //             model,
+    //             ruangan_id,
+    //             jumlah,
+    //             tahun_peroleh,
+    //             nilai_peroleh,
+    //             nilai_perbaikan,
+    //             no_inventaris,
+    //             kondisi,
+    //             cover], function (err, result) {
+    //                 if (err) console.log(err);
+
+    //                 res.send({
+    //                     success: true,
+    //                     message: 'Your record has been saved successfully',
+    //                 })
+    //             })
+
+    //         connection.release();
+    //     })
+    // },
+
     addDataBarang(req, res) {
-        // parse data
+        // Mengambil data dari permintaan POST di frontend
         const {
             no,
             nama_barang,
@@ -60,12 +109,22 @@ module.exports = {
             nilai_perbaikan,
             no_inventaris,
             kondisi
-        } = req.body
+        } = req.body;
 
+        // Gunakan data yang diterima dari frontend untuk menyusun query INSERT
+        const query = 'INSERT INTO barang (no, nama_barang, merek, tipe, model, ruangan_id, jumlah, tahun_peroleh, nilai_peroleh, nilai_perbaikan, no_inventaris, kondisi) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+
+        // Gunakan koneksi basis data dari pool untuk menjalankan query
         pool.getConnection(function (err, connection) {
-            if (err) console.log(err);
+            if (err) {
+                console.log(err);
+                res.status(500).json({
+                    success: false,
+                    message: 'Gagal menambahkan data'
+                });
+                return;
+            }
 
-            const query = 'INSERT INTO barang ( no,nama_barang,merek,tipe,model,ruangan_id,jumlah,tahun_peroleh,nilai_peroleh,nilai_perbaikan,no_inventaris,kondisi) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
             connection.query(query, [
                 no,
                 nama_barang,
@@ -78,18 +137,24 @@ module.exports = {
                 nilai_peroleh,
                 nilai_perbaikan,
                 no_inventaris,
-                kondisi,
-                cover], function (err, result) {
-                    if (err) console.log(err);
+                kondisi
+            ], function (err, result) {
+                connection.release(); // Selalu pastikan untuk melepaskan koneksi setelah penggunaannya
 
-                    res.send({
+                if (err) {
+                    console.log(err);
+                    res.status(500).json({
+                        success: false,
+                        message: 'Gagal menambahkan data'
+                    });
+                } else {
+                    res.status(200).json({
                         success: true,
-                        message: 'Your record has been saved successfully',
-                    })
-                })
-
-            connection.release();
-        })
+                        message: 'Data berhasil ditambahkan',
+                    });
+                }
+            });
+        });
     },
 
     editDataBarang(req, res) {
